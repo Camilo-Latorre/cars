@@ -15,8 +15,13 @@ class Car extends Model
 
     // Columnas que pueden llenarse masivamente
     protected $fillable = [
-        'car_make', 'car_model', 'car_year', 'car_price', 'car_status'
+        'car_make', 'car_model', 'car_year', 'car_price', 'car_status', 'categoria_id', 'codigo_barras'
     ];
+    // Relación con el modelo Categoria
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
 }
 
 

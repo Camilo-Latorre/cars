@@ -11,20 +11,27 @@ class CarController extends Controller
     // Obtener todos los registros
     public function index()
     {
-        return response()->json(Car::all(), 200);
+        // Incluimos la relación con Categoría
+        $cars = Car::with('categoria')->get();
+        return response()->json($cars, 200);
     }
 
     // Crear un nuevo registro
     public function store(CarRequest $request)
     {
+        // Creamos el carro con los datos validados
         $car = Car::create($request->validated());
-        return response()->json($car, 201);
+        return response()->json([
+            'message' => 'Car created successfully',
+            'data' => $car
+        ], 201);
     }
 
     // Obtener un registro específico
     public function show($id)
     {
-        $car = Car::find($id);
+        // Incluimos la categoría relacionada
+        $car = Car::with('categoria')->find($id);
 
         if (!$car) {
             return response()->json(['message' => 'Car not found'], 404);
@@ -42,8 +49,12 @@ class CarController extends Controller
             return response()->json(['message' => 'Car not found'], 404);
         }
 
+        // Actualizamos el carro con los datos validados
         $car->update($request->validated());
-        return response()->json($car, 200);
+        return response()->json([
+            'message' => 'Car updated successfully',
+            'data' => $car
+        ], 200);
     }
 
     // Eliminar un registro
